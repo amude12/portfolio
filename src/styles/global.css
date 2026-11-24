@@ -271,6 +271,7 @@ p, h1, h2, h3, h4 { margin: 0; }
 .gc__meta { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
 .gc__meta h3 { font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -0.12px; }
 .gc__meta button { border: 0; background: none; padding: 0; white-space: nowrap; }
+.gc__meta .arrow-link { white-space: nowrap; flex: none; }
 /* Mosaic: every screen shown whole (contain), arranged by layout */
 .mosaic { display: grid; gap: 14px; padding: 24px; cursor: default; }
 .mosaic--feature { grid-template-columns: 1.6fr 1fr; grid-template-rows: 1fr 1fr; }
@@ -517,7 +518,7 @@ p, h1, h2, h3, h4 { margin: 0; }
 .mds-type__scale { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .mds-type__scale li { display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid var(--mds-line); }
 .mds-type__scale li:first-child { border-top: 0; padding-top: 0; }
-.mds-type__meta { font-size: 11px; color: var(--mds-body); display: flex; gap: 8px; }
+.mds-type__meta { font-size: 11px; color: var(--mds-body); display: flex; flex-wrap: wrap; gap: 0 8px; }
 .mds-type__meta em { font-style: normal; color: #9aa1b0; }
 .mds-type__sample { line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -595,7 +596,7 @@ p, h1, h2, h3, h4 { margin: 0; }
   .mds-colors__group { grid-template-columns: 1fr; gap: 8px; }
   .mds-colors__group .mds-eyebrow { margin: 0; }
   .mds-swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mds-type { grid-template-columns: 1fr; }
+  .mds-type { grid-template-columns: minmax(0, 1fr); }
   .mds-type__specimen { width: 96px; }
   .mds-shapes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mds-input { min-width: 0; flex: 1 1 100%; }
@@ -785,7 +786,7 @@ p, h1, h2, h3, h4 { margin: 0; }
 @media (max-width: 900px) { .to-top { width: 46px; height: 46px; right: 16px; bottom: 16px; } }
 
 /* ── Hero: design canvas ───────────────────────── */
-.hero2 { position: relative; overflow: hidden; padding-block: 88px 96px; min-height: 680px; display: flex; align-items: center; isolation: isolate; }
+.hero2 { position: relative; overflow: hidden; padding-block: 56px 96px; min-height: 648px; display: flex; align-items: center; isolation: isolate; }
 .hero2__grid { position: absolute; inset: 0; z-index: -2; background-image: radial-gradient(#c9d3ea 1.2px, transparent 1.2px); background-size: 24px 24px; -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 40%, transparent 85%); mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 40%, transparent 85%); }
 .hero2::before { content: ''; position: absolute; z-index: -1; width: 720px; height: 720px; left: 50%; top: 42%; transform: translate(-50%, -50%); background: radial-gradient(circle, rgba(18, 91, 251, 0.10), transparent 62%); }
 .hero2__inner { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -835,6 +836,8 @@ p, h1, h2, h3, h4 { margin: 0; }
 .hero2__flow span.is-on { background: var(--blue); color: #fff; }
 .hero2__flow em { font-style: normal; color: #9aa6c4; }
 .hero2__float--flow { left: calc(50% - 690px); bottom: 64px; }
+/* the cursor wanders within a centred band so it stays near the floating cards on very wide screens */
+.hero2__cursor-area { position: absolute; top: 0; bottom: 0; left: 50%; width: min(100%, 1440px); transform: translateX(-50%); }
 .hero2__cursor { position: absolute; z-index: 3; display: flex; align-items: flex-start; gap: 2px; filter: drop-shadow(0 4px 8px rgba(18, 91, 251, 0.35)); }
 .hero2__cursor span { margin-top: 14px; background: var(--blue); color: #fff; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 0 999px 999px 999px; }
 
@@ -846,10 +849,15 @@ p, h1, h2, h3, h4 { margin: 0; }
 }
 @media (max-width: 1220px) {
   .hero2__canvas { display: none; }
-  .hero2 { min-height: 0; padding-block: 72px 64px; }
+  .hero2__sel b { display: none; } /* the label only fits beside "intuitive" when it ends a line */
+  .hero2 { min-height: 0; padding-block: 50px 64px; }
 }
 @media (max-width: 900px) {
-  .hero2 { padding-block: 48px 48px; }
+  .hero2 { padding-block: 34px 48px; }
+  /* keep the CTA and both icon buttons on one row on small phones */
+  .hero2__actions { gap: 10px; flex-wrap: nowrap; }
+  .hero2__actions .btn-work { margin-right: 0; padding: 0 16px; white-space: nowrap; }
+  .hero2__actions .social { width: 44px; height: 44px; flex: none; }
   .hero2__title { margin-top: 20px; font-size: clamp(36px, 10vw, 46px); }
   .hero2__intro { font-size: 16px; line-height: 26px; margin-top: 20px; }
   .hero2__sel b { display: none; }

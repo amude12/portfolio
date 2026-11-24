@@ -94,7 +94,7 @@ export const gallery = [
     tint: '#f0f3fb',
     span: 'wide',
     layout: 'feature',
-    figma: '', // add the Figma link: "View Design" then opens it in a new tab
+    figma: 'https://www.figma.com/design/1oS4d2sfZKS8ID3GisFdfN/Inside-My-Figma-Workspace?node-id=2-2',
     // Medtigo: Admin dashboard, Provider dashboard, Acquisition Reports, Application details (scripts/gallery-screens.mjs)
     images: ['/gallery/dash-admin.webp', '/gallery/dash-provider.webp', '/gallery/dash-acquisition.webp', '/gallery/dash-application.webp'],
   },
@@ -103,7 +103,7 @@ export const gallery = [
     tint: '#ecf6f4',
     span: 'narrow',
     layout: 'grid',
-    figma: '',
+    figma: 'https://www.figma.com/design/1oS4d2sfZKS8ID3GisFdfN/Inside-My-Figma-Workspace?node-id=2-3',
     // Student Management app screens
     images: ['/gallery/mobile-schedule.webp', '/gallery/mobile-home.webp', '/gallery/mobile-contact.webp', '/gallery/mobile-settings.webp'],
   },
@@ -112,7 +112,7 @@ export const gallery = [
     tint: '#fff2ee',
     span: 'narrow',
     layout: 'feature3',
-    figma: '',
+    figma: 'https://www.figma.com/design/1oS4d2sfZKS8ID3GisFdfN/Inside-My-Figma-Workspace?node-id=2-4',
     // tall colour scale first, then type, buttons and form controls
     images: ['/gallery/ds-colour.svg', '/gallery/ds-type.svg', '/gallery/ds-buttons.svg', '/gallery/ds-forms.svg'],
   },
@@ -121,7 +121,7 @@ export const gallery = [
     tint: '#f9f7ea',
     span: 'wide',
     layout: 'grid',
-    figma: '',
+    figma: 'https://www.figma.com/design/1oS4d2sfZKS8ID3GisFdfN/Inside-My-Figma-Workspace?node-id=2-5',
     images: ['/gallery/wire-lofi.svg', '/gallery/flow-checkout.svg', '/gallery/flow-sitemap.svg', '/gallery/flow-prototype.svg'],
   },
 ];
@@ -152,6 +152,12 @@ export const testimonials = [
     name: 'Aditya Parihar',
     title: 'React JS Developer',
     avatar: '/testimonials/aditya.webp',
+  },
+  {
+    quote: 'As a developer, I always enjoyed building Anuradha’s designs. Her Figma files are organised, components are consistent and edge cases are already thought through. She understands technical constraints, which makes handoffs smooth. A great teammate!',
+    name: 'Dimpi',
+    title: 'Senior MERN Developer',
+    avatar: '/testimonials/dimpi.webp',
   },
 ];
 

@@ -4,13 +4,27 @@ import { testimonials } from '../data/site.js';
 import { SectionHeading, stagger, item } from '../components/Reveal.jsx';
 
 // Figma: a row of three cards (one on phones). With more testimonials than fit, the row
-// becomes a looping carousel: one dot per testimonial, autoplay that pauses on hover/focus.
-const CLONES = 2; // copies of the first cards appended so the last position still shows a full row
+// becomes a carousel that moves one card at a time and always shows a full row of real
+// cards: one dot per position, wrapping from the last back to the first. Autoplay pauses
+// on hover/focus.
 const AUTOPLAY_MS = 6000;
+const ONE_UP = '(max-width: 900px)'; // matches the .t-track { --per: 1 } breakpoint in global.css
 
-function Card({ t, hidden }) {
+function usePerView() {
+  const get = () => (typeof window !== 'undefined' && window.matchMedia(ONE_UP).matches ? 1 : 3);
+  const [per, setPer] = useState(get);
+  useEffect(() => {
+    const mq = window.matchMedia(ONE_UP);
+    const on = () => setPer(get());
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return per;
+}
+
+function Card({ t }) {
   return (
-    <motion.figure className="tc" variants={item} style={{ margin: 0 }} aria-hidden={hidden || undefined} inert={hidden ? '' : undefined}>
+    <motion.figure className="tc" variants={item} style={{ margin: 0 }}>
       <blockquote>{t.quote}</blockquote>
       <figcaption className="tc__who">
         <span className="tc__avatar">{t.avatar ? <img src={t.avatar} alt="" width="48" height="48" loading="lazy" /> : t.name.charAt(0)}</span>
@@ -22,36 +36,19 @@ function Card({ t, hidden }) {
 
 export default function Testimonials() {
   const n = testimonials.length;
-  const [index, setIndex] = useState(0); // 0…n, where n is the clone of 0
-  const [animate, setAnimate] = useState(true);
+  const per = usePerView();
+  const positions = Math.max(1, n - per + 1);
+  const [rawIndex, setIndex] = useState(0);
+  const index = Math.min(rawIndex, positions - 1); // stays valid when the layout changes
   const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
   const ref = useRef(null);
   const inView = useInView(ref, { amount: 0.4 });
   const startX = useRef(null);
-  const carousel = n > 1;
+  const carousel = positions > 1;
 
-  const go = useCallback((to) => { setAnimate(true); setIndex(to); }, []);
-  const next = useCallback(() => go(index + 1 > n ? 1 : index + 1), [go, index, n]);
-  const prev = useCallback(() => {
-    if (index > 0) return go(index - 1);
-    // jump to the clone of the first card without animating, then slide back one
-    setAnimate(false);
-    setIndex(n);
-    requestAnimationFrame(() => requestAnimationFrame(() => go(n - 1)));
-  }, [go, index, n]);
-
-  // After sliding onto the clones, snap back to the real first card invisibly.
-  const onTransitionEnd = (e) => {
-    if (e.target !== e.currentTarget || index < n) return;
-    setAnimate(false);
-    setIndex(index - n);
-  };
-  useEffect(() => {
-    if (animate) return;
-    const id = requestAnimationFrame(() => requestAnimationFrame(() => setAnimate(true)));
-    return () => cancelAnimationFrame(id);
-  }, [animate]);
+  const next = useCallback(() => setIndex((index + 1) % positions), [index, positions]);
+  const prev = useCallback(() => setIndex((index - 1 + positions) % positions), [index, positions]);
 
   useEffect(() => {
     if (!carousel || paused || reduce || !inView) return;
@@ -60,9 +57,6 @@ export default function Testimonials() {
   }, [carousel, paused, reduce, inView, next, index]);
 
   if (!n) return null;
-  const items = carousel ? [...testimonials, ...testimonials.slice(0, CLONES)] : testimonials;
-  const active = index % n;
-
   return (
     <section className="section section--tint" id="kind-words">
       <div className="container" ref={ref}>
@@ -85,27 +79,26 @@ export default function Testimonials() {
           }}
         >
           <motion.div
-            className={`t-track${animate ? '' : ' t-track--snap'}`}
+            className="t-track"
             style={{ '--i': index }}
-            onTransitionEnd={onTransitionEnd}
             variants={stagger}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.2 }}
           >
-            {items.map((t, k) => <Card key={k} t={t} hidden={k >= n} />)}
+            {testimonials.map((t) => <Card key={t.name} t={t} />)}
           </motion.div>
         </div>
         {carousel && (
           <div className="t-dots">
-            {testimonials.map((t, k) => (
+            {Array.from({ length: positions }, (_, k) => (
               <button
-                key={t.name}
+                key={k}
                 type="button"
-                className={`t-dot${k === active ? ' is-active' : ''}`}
-                aria-label={`Show testimonial from ${t.name}`}
-                aria-current={k === active || undefined}
-                onClick={() => go(k)}
+                className={`t-dot${k === index ? ' is-active' : ''}`}
+                aria-label={per === 1 ? `Show testimonial from ${testimonials[k].name}` : `Show testimonials ${k + 1} to ${k + per} of ${n}`}
+                aria-current={k === index || undefined}
+                onClick={() => setIndex(k)}
               />
             ))}
           </div>

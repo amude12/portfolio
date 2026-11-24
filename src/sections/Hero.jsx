@@ -112,6 +112,7 @@ export default function Hero() {
           </div>
         </Float>
         {!reduce && (
+          <div className="hero2__cursor-area">
           <motion.div
             className="hero2__cursor"
             // stays in the side margins so it never crosses the headline
@@ -122,6 +123,7 @@ export default function Hero() {
             <svg viewBox="0 0 20 20" width="20" height="20"><path d="M3 2l13 6.2-5.6 1.6L8 15.6z" fill="#125bfb" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" /></svg>
             <span>{site.name.split(' ')[0]}</span>
           </motion.div>
+          </div>
         )}
       </motion.div>
 
